@@ -18,26 +18,26 @@ public class CameraFollow : MonoBehaviour
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
 
-    private void LateUpdate()
-    {
-        if (target == null)
-            return;
+    // private void LateUpdate()
+    // {
+    //     if (target == null)
+    //         return;
 
-        Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+    //     Vector2 mouseDelta = Mouse.current.delta.ReadValue();
 
-        yaw += mouseDelta.x * sensitivity;
-        pitch -= mouseDelta.y * sensitivity;
+    //     yaw += mouseDelta.x * sensitivity;
+    //     pitch -= mouseDelta.y * sensitivity;
 
-        pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+    //     pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
-        Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
+    //     Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
 
-        transform.position = target.position + rotation * offset;
+    //     transform.position = target.position + rotation * offset;
 
-        transform.LookAt(target.position + Vector3.up * 1.2f);
-    }
+    //     transform.LookAt(target.position + Vector3.up * 1.2f);
+    // }
 }
