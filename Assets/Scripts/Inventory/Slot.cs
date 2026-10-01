@@ -38,6 +38,12 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void UpdateSlot()
     {
+        if (itemIcon == null)
+        {
+            itemIcon = transform.GetChild(0).GetComponent<Image>();
+            itemAmountText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        }
+        
         if (heldItem != null)
         {
             itemIcon.sprite = heldItem.itemIcon;

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using TMPro;
 
 public class Inventory : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class Inventory : MonoBehaviour
 
     public Image dragIcon;
     public float pickupRange = 3f;
-    public ItemOnGround lookedAtItem = null;
+    private ItemOnGround lookedAtItem = null;
     public Material highlightMaterial;
     private Material originalMaterial;
     private Renderer lookedAtRenderer = null;
@@ -20,6 +21,10 @@ public class Inventory : MonoBehaviour
     public GameObject inventorySlotParent;
     public GameObject containerObj;
 
+    public GameObject itemDescriptionParent;
+    public Image itemDescriptionIcon;
+    public TextMeshProUGUI itemNameText;
+    public TextMeshProUGUI itemDescriptionText;
 
 
     private List<Slot> inventorySlots = new List<Slot>();
@@ -54,6 +59,8 @@ public class Inventory : MonoBehaviour
         StartDrag();
         UpdateDragIconPosition();
         EndDrag();
+
+        UpdateItemDescription();
     }
 
     void AddItem(ItemSO item, int amount = 1)
@@ -190,14 +197,16 @@ public class Inventory : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, pickupRange))
         {
             ItemOnGround itemOnGround = hit.collider.GetComponent<ItemOnGround>();
+            Debug.Log("Hit: " + hit.collider.name);
             if (itemOnGround != null)
             {
                 Renderer renderer = itemOnGround.GetComponent<Renderer>();
-                if (lookedAtRenderer != null)
+                if (renderer != null)
                 {
                     originalMaterial = renderer.material;
                     renderer.material = highlightMaterial;
                     lookedAtRenderer = renderer;
+                    Debug.Log("Highlighting");
                 }
             }
             else
@@ -208,6 +217,22 @@ public class Inventory : MonoBehaviour
         else
         {
             lookedAtItem = null;
+        }
+    }
+
+    private void UpdateItemDescription()
+    {
+        Slot hoveredSlot = GetHoveredSlot();
+        if (hoveredSlot != null && hoveredSlot.GetItem() != null)
+        {
+            itemDescriptionParent.SetActive(true);
+            itemDescriptionIcon.sprite = hoveredSlot.GetItem().itemIcon;
+            itemNameText.text = hoveredSlot.GetItem().itemName;
+            itemDescriptionText.text = hoveredSlot.GetItem().description;
+        }
+        else
+        {
+            itemDescriptionParent.SetActive(false);
         }
     }
 }

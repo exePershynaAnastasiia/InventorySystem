@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e20b226526c7a64a9e167a64a177527, type: 3}
   m_Name: Leaf
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: 
+  itemName: Leaf
   itemIcon: {fileID: 21300000, guid: bba48d60fe9dad74f822febc4e6a5787, type: 3}
   maxStack: 10
-  itemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 8890007356805760724, guid: 339ad1d0771b22a4899b54828a6c5a02, type: 3}
   handItemPrefab: {fileID: 0}
+  description: Green is clean

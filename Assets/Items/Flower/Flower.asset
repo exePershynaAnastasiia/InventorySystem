@@ -15,5 +15,6 @@ MonoBehaviour:
   itemName: Flower
   itemIcon: {fileID: 21300000, guid: 33cffe8bc4fbc544da56af7e83fb777d, type: 3}
   maxStack: 5
-  itemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 8554770660872192326, guid: f88946a04f3214b4ab1092a9eada818a, type: 3}
   handItemPrefab: {fileID: 0}
+  description: Beautiful just like you
