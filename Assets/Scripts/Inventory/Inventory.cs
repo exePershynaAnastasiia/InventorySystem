@@ -16,6 +16,10 @@ public class Inventory : MonoBehaviour
     private Material originalMaterial;
     private Renderer lookedAtRenderer = null;
 
+    private int equippedHotBarIndex = 0; //0-5
+    public float equippedOpacity = 0.9f;
+    public float normalOpacity = 0.5f;
+
 
     public GameObject hotBarObj;
     public GameObject inventorySlotParent;
@@ -61,6 +65,8 @@ public class Inventory : MonoBehaviour
         EndDrag();
 
         UpdateItemDescription();
+
+        HandleHotBarInput();
     }
 
     void AddItem(ItemSO item, int amount = 1)
@@ -234,5 +240,37 @@ public class Inventory : MonoBehaviour
         {
             itemDescriptionParent.SetActive(false);
         }
+    }
+
+    private void UpdateHotBarOpacity()
+    {
+        for (int i = 0; i < hotBarSlots.Count; i++)
+        {
+            Image slotImage = hotBarSlots[i].GetComponent<Image>();
+            if (slotImage != null)
+            {
+                Color color = slotImage.color;
+                color.a = (i == equippedHotBarIndex) ? equippedOpacity : normalOpacity;
+                slotImage.color = color;
+            }
+        }
+    }
+
+    private void HandleHotBarInput()
+    {
+        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+            equippedHotBarIndex = 0;
+        else if (Keyboard.current.digit2Key.wasPressedThisFrame)
+            equippedHotBarIndex = 1;
+        else if (Keyboard.current.digit3Key.wasPressedThisFrame)
+            equippedHotBarIndex = 2;
+        else if (Keyboard.current.digit4Key.wasPressedThisFrame)
+            equippedHotBarIndex = 3;
+        else if (Keyboard.current.digit5Key.wasPressedThisFrame)
+            equippedHotBarIndex = 4;
+        else if (Keyboard.current.digit6Key.wasPressedThisFrame)
+            equippedHotBarIndex = 5;
+
+        UpdateHotBarOpacity();
     }
 }
