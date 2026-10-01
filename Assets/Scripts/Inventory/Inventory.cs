@@ -9,10 +9,19 @@ public class Inventory : MonoBehaviour
     public ItemSO testItem2;
 
     public Image dragIcon;
+    public float pickupRange = 3f;
+    public ItemOnGround lookedAtItem = null;
+    public Material highlightMaterial;
+    private Material originalMaterial;
+    private Renderer lookedAtRenderer = null;
 
 
     public GameObject hotBarObj;
     public GameObject inventorySlotParent;
+    public GameObject containerObj;
+
+
+
     private List<Slot> inventorySlots = new List<Slot>();
     private List<Slot> hotBarSlots = new List<Slot>();
     private List<Slot> allSlots = new List<Slot>();
@@ -30,14 +39,17 @@ public class Inventory : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current.eKey.wasPressedThisFrame)
+        if (Keyboard.current.tabKey.wasPressedThisFrame)
         {
-            AddItem(testItem1, 1);
+            containerObj.SetActive(!containerObj.activeSelf);
+            Cursor.lockState = containerObj.activeSelf ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = containerObj.activeSelf ? true : false;
+
+            PlayerCamera.Instance.updatingRotation = !PlayerCamera.Instance.updatingRotation;
         }
-        if (Keyboard.current.rKey.wasPressedThisFrame)
-        {
-            AddItem(testItem2, 1);
-        }
+
+        DetectLookedAtItem();
+        PickUp();
 
         StartDrag();
         UpdateDragIconPosition();
@@ -148,6 +160,54 @@ public class Inventory : MonoBehaviour
         if (isDragging)
         {
             dragIcon.transform.position = Mouse.current.position.ReadValue();
+        }
+    }
+
+    private void PickUp()
+    {
+        if (lookedAtRenderer != null && Keyboard.current.eKey.wasPressedThisFrame)
+        {
+            ItemOnGround itemOnGround = lookedAtRenderer.GetComponent<ItemOnGround>();
+            if (itemOnGround != null)
+            {
+                AddItem(itemOnGround.item, itemOnGround.amount);
+                Destroy(itemOnGround.gameObject);
+                lookedAtRenderer = null;
+                lookedAtItem = null;
+            }
+        }
+    }
+
+    private void DetectLookedAtItem()
+    {
+        if (lookedAtRenderer != null)
+        {
+            lookedAtRenderer.material = originalMaterial;
+            lookedAtRenderer = null;
+            originalMaterial = null;
+        }
+        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hit, pickupRange))
+        {
+            ItemOnGround itemOnGround = hit.collider.GetComponent<ItemOnGround>();
+            if (itemOnGround != null)
+            {
+                Renderer renderer = itemOnGround.GetComponent<Renderer>();
+                if (lookedAtRenderer != null)
+                {
+                    originalMaterial = renderer.material;
+                    renderer.material = highlightMaterial;
+                    lookedAtRenderer = renderer;
+                }
+            }
+            else
+            {
+                lookedAtItem = null;
+            }
+        }
+        else
+        {
+            lookedAtItem = null;
         }
     }
 }
